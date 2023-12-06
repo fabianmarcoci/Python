@@ -82,6 +82,7 @@ def compute_difference(pre_version_file, latest_version_file):
         while pre_version_size != latest_version_size:
             if is_pre_version_smaller:
                 difference.append(latest_version[pre_version_size])
+                difference.append('|')
                 pre_version_size += 1
             else:
                 difference.append(1)
@@ -176,7 +177,6 @@ def apply_commands(now_version_file, diff_file):
             j += 1
             str_element = ''.join(map(str, str_element))
             element = int(str_element)
-            print(chr(element))
             # index extract
             str_index = []
             while diff[j] != '|':
@@ -186,14 +186,24 @@ def apply_commands(now_version_file, diff_file):
             str_index = ''.join(map(str, str_index))
             index = int(str_index)
             now_version[index] = chr(element)
-            print(now_version)
+            print(f'Change | Current version is: {now_version}')
         elif enabled_insertion:
-            now_version.append(diff[i])
+            j = i
+            str_element = []
+            # element extract
+            while diff[j] != '|':
+                str_element.append(diff[j])
+                j += 1
+            # pass '|' character
+            j += 1
+            str_element = ''.join(map(str, str_element))
+            element = int(str_element)
+            now_version.append(chr(element))
+            print(f'Insert | Current version is: {now_version}')
         elif enabled_delete:
             now_version.pop(-1)
+            print(f'Delete | Current version is: {now_version}')
 
-    print(now_version)
-    exit(1)
     now_version_string = ''.join(map(str, now_version))
     now_version_bytes = now_version_string.encode('utf-8')
     return now_version_bytes
